@@ -32,23 +32,25 @@ class Solution(SolutionBase):
             p0 = line.index("<")
             p1 = line.index(">")
             pos = line[p0 + 1 : p1]
+
             v1 = line[p1 + 1 :].index("<")
             v2 = line[p1 + 1 :].index(">")
             vel = line[p1 + 1 :][v1 + 1 : v2]
+
             points += [[[*map(int, pos.split(","))], tuple(map(int, vel.split(",")))]]
 
         for i in range(15000):
             np = []
             for p in points:
                 np += [[p[0][0] + p[1][0] * i, p[0][1] + p[1][1] * i]]
-            r = self.draw(np, i)
+            r = self.draw(np)
             if r:
-                return r
+                return i
 
     def part2(self, data):
         return "in the result of part 1"
 
-    def draw(self, points, i):
+    def draw(self, points):
         min_x = min(p[0] for p in points)
         max_x = max(p[0] for p in points)
         min_y = min(p[1] for p in points)
@@ -62,5 +64,5 @@ class Solution(SolutionBase):
                         print(".", end="")
                 print()
             print()
-            return i
+            return True
         return False
