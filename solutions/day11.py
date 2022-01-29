@@ -1,3 +1,4 @@
+from collections import defaultdict
 from utils.solution_base import SolutionBase
 
 
@@ -49,7 +50,7 @@ class Solution(SolutionBase):
 
         return f"{p[0]},{p[1]}"
 
-    def part2(self, data):
+    def part2_org(self, data):
         serial = int(data[0])
         w = 300
         h = 300
@@ -65,10 +66,43 @@ class Solution(SolutionBase):
 
         power = []
         for size in range(1, w + 1):
-            print(size)
+            # print(size)
             for i in range(0, w - size + 1):
                 for j in range(0, h - size + 1):
                     p = sum(sum(g[i : i + size]) for g in grid[j : j + size])
+                    power += [(p, (i + 1, j + 1), size)]
+        p = max(power)
+
+        return f"{p[1][0]},{p[1][1]},{p[2]}"
+
+    def part2(self, data):
+        serial = int(data[0])
+        w = 300
+        h = 300
+        grid = []
+
+        for y in range(1, h + 1):
+            g = []
+            for x in range(1, w + 1):
+                rack_id = x + 10
+                power = (((rack_id * y + serial) * rack_id) // 100) % 10 - 5
+                g += [power]
+            grid += [g]
+
+        # building summed area table
+        # ref: https://www.geeksforgeeks.org/submatrix-sum-queries/
+        summed_table = defaultdict(int)
+        for y in range(len(grid)):
+            for x in range(len(grid[y])):
+                summed_table[(x, y)] = sum(sum(grid[j][: x + 1]) for j in range(y + 1))
+
+        power = []
+        for size in range(1, w + 1):
+            # print(size)
+            for i in range(0, w - size + 1):
+                for j in range(0, h - size + 1):
+                    # p = sum(sum(g[i : i + size]) for g in grid[j : j + size])
+                    p = summed_table[(i + size - 1, j + size - 1)] - summed_table[(i - 1, j + size - 1)] - summed_table[(i + size - 1, j - 1)] + summed_table[(i - 1, j - 1)]
                     power += [(p, (i + 1, j + 1), size)]
         p = max(power)
 
