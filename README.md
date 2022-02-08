@@ -3,7 +3,7 @@
 My solutions for [Advent of Code 2018](https://adventofcode.com/2018/) using Python3
 
 ```
-usage: app.py [-h] -d day_number -p part_number
+usage: app.py [-h] -d day_number -p part_number [--raw]
 
 Advent of Code solution runner
 
